@@ -1,4 +1,5 @@
-.post-content {
-    font-family: Helvetica;
-    background-color: black;
+.post-content p {
+    border: 5px solid whitesmoke;
+    font-family: monospace;
+    background-color: lightgray;
 }
