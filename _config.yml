@@ -7,10 +7,9 @@
 
 # Site settings
 title: Vishal Koosuri
-email: your-email@domain.com
+email: vishal.koosuri1@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  Welcome everyone! This is a personal blog being created by Vishal Koosuri.
-  Feel free to have a look at it.
+  Developed by Vishal Koosuri &copy;
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://yourdomain.com" # the base hostname & protocol for your site
 twitter_username: vishal_smarty21
