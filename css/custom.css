@@ -3,3 +3,8 @@
     font-family: monospace;
     background-color: lightgray;
 }
+
+.profile-picture {
+    float: left;
+    padding: 20px;
+}
