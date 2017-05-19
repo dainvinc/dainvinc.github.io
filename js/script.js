@@ -5,8 +5,10 @@ $(document).ready(function() {
     }
     
     $(".username").click(function() {
-       $(this).target = "_blank";
-       window.location = $(this).find("a").attr("href");
+       //$(this).target = "_blank";
+       var link = $(this).find("a");
+       link.attr("target", "_blank");
+       window.open(link.attr("href"));
        return false;
     });
 });
