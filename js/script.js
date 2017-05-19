@@ -5,10 +5,6 @@ $(document).ready(function() {
     }
     
     $(".username").click(function() {
-       //$(this).target = "_blank";
-       var link = $(this).find("a");
-       link.attr("target", "_blank");
-       window.open(link.attr("href"));
-       return false;
+       $(this).target = "_blank";
     });
 });
