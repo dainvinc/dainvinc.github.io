@@ -6,5 +6,7 @@ $(document).ready(function() {
     
     $(".username").click(function() {
        $(this).target = "_blank";
+       window.location = $(this).find("a").attr("href");
+       return false;
     });
 });
