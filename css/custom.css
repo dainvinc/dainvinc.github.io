@@ -9,3 +9,12 @@
     padding: 10px;
     margin: 6px;
 }
+
+.quicknotes {
+    display: block;
+    font-family: Comic Sans MS;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #CCFFFF;
+    outline: none;
+}
