@@ -1,9 +1,5 @@
 /* global $ */
 $(document).ready(function() {
-    $("").click(function() {
-        $(".site-title").toggle("slow");
-    });
-    
     if(window.location.pathname == '/about.html') {
         alert("Click to know more about Vishal!");    
     }
@@ -12,3 +8,7 @@ $(document).ready(function() {
        $(this).target = "_blank";
     });
 });
+
+$(document).click(function() {
+        $(".site-title").toggle("slow");
+    });
