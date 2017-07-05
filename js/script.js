@@ -1,6 +1,8 @@
 /* global $ */
 $(document).ready(function() {
-    $(".site-title").slideToggle("slow");
+    $(".site-title").click(function() {
+        $(".site-title").toggle("slow", "linear")
+    });
     
     if(window.location.pathname == '/about.html') {
         alert("Click to know more about Vishal!");    
