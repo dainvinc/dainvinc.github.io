@@ -1,6 +1,6 @@
 /* global $ */
 $(document).ready(function() {
-    $(".site-title").click(function() {
+    $("").click(function() {
         $(".site-title").toggle("slow");
     });
     
