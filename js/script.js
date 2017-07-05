@@ -1,7 +1,7 @@
 /* global $ */
 $(document).ready(function() {
     $(".site-title").click(function() {
-        $(".site-title").toggle("slow", "linear")
+        $(".site-title").toggle("slow")
     });
     
     if(window.location.pathname == '/about.html') {
