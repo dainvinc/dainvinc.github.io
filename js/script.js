@@ -1,5 +1,7 @@
 /* global $ */
 $(document).ready(function() {
+    $(".site-title").hide();
+    
     if(window.location.pathname == '/about.html') {
         alert("Click to know more about Vishal!");    
     }
