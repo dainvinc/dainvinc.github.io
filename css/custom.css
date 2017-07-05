@@ -16,5 +16,10 @@
     padding: 10px;
     border-radius: 10px;
     background-color: #CCFFFF;
-    outline: none;
+    outline: none; 
+}
+
+.site-title {
+    color: red;
+    background-color: blue;
 }
