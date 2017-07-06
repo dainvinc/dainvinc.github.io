@@ -9,9 +9,9 @@ $(document).ready(function() {
     });
 });
 
-$(document).click(function() {
-        $(".site-title").toggle("slow", "linear");
-    });
+// $(document).click(function() {
+//         $(".site-title").toggle("slow", "linear");
+//     });
     
 $(function() {
     $(".site-title").typed({strings: ["First sentence", "Second"], typeSpeed: 0});
