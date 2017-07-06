@@ -14,5 +14,8 @@ $(document).ready(function() {
 //     });
     
 $(function() {
-    $(".site-title").typed({strings: ["First sentence", "Second"], typeSpeed: 0});
+    $(".site-title").typed({strings: ["First sentence", "Second"], 
+        typeSpeed: 50, 
+        backDelay: 500
+    });
 })
