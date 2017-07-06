@@ -14,7 +14,7 @@ $(document).ready(function() {
 //     });
 
 setTimeout(function(){
-        $(".site-title").typed({
+        $(".post-title").Typed({
             strings: ["Welcome..."],
             typeSpeed: 30, 
             backDelay: 750,
