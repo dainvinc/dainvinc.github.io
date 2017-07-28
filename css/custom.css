@@ -20,6 +20,7 @@
 }
 
 .site-title {
+    overflow: hidden;
     border-right: .15em solid orange;
     white-space: nowrap;
     animation:
