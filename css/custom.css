@@ -20,6 +20,8 @@
 }
 
 .site-title {
+    border-right: .15em solid orange;
+    white-space: nowrap;
     animation:
         typing 5s steps(40, end),
         blink-caret .75s step-end infinite
@@ -32,4 +34,5 @@
 
 @keyframes blink-caret {
     from, to {border-color: transparent;}
+    50% {border-color: orange;}
 }
