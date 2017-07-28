@@ -19,7 +19,17 @@
     outline: none; 
 }
 
-/*.site-title {*/
-/*    color: red;*/
-/*    background-color: blue;*/
-/*}*/
+.site-title {
+    animation:
+        typing 5s steps(40, end),
+        blink-caret .75s step-end infinite
+}
+
+@keyframes typing {
+    from {width: 0}
+    to {width: auto}
+}
+
+@keyframes blink-caret {
+    from, to {border-color: transparent;}
+}
