@@ -8,17 +8,3 @@ $(document).ready(function() {
        $(this).target = "_blank";
     });
 });
-
-// $(document).click(function() {
-//         $(".site-title").toggle("slow", "linear");
-//     });
-
-setTimeout(function(){
-        $(".post-title").Typed({
-            strings: ["Welcome..."],
-            typeSpeed: 30, 
-            backDelay: 750,
-            loop: false, 
-            loopCount: false,
-        });
-    }, 0);
