@@ -18,3 +18,7 @@
     background-color: #CCFFFF;
     outline: none; 
 }
+
+.ui .container {
+    font-family: monospace;
+}
