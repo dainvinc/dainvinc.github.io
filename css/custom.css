@@ -35,7 +35,7 @@
     left: 25%;
 }
 
-.header .title {
+#mainTitle.header .title {
     font-size: 60px;
     color: white;
     margin-bottom: 20px;
