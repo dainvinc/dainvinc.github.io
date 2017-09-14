@@ -22,3 +22,8 @@
 .ui .container {
     font-family: monospace;
 }
+
+#myCanvas {
+    width: 100%;
+    height: 100%;
+}
