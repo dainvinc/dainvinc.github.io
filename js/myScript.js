@@ -1,264 +1,181 @@
-// Adapted from Flocking Processing example by Daniel Schiffman:
-// http://processing.org/learning/topics/flocking.html
-
-var Boid = Base.extend({
-	initialize: function(position, maxSpeed, maxForce) {
-		var strength = Math.random() * 0.5;
-		this.acceleration = new Point();
-		this.vector = Point.random() * 2 - 1;
-		this.position = position.clone();
-		this.radius = 30;
-		this.maxSpeed = maxSpeed + strength;
-		this.maxForce = maxForce + strength;
-		this.amount = strength * 10 + 10;
-		this.count = 0;
-		this.createItems();
-	},
-
-	run: function(boids) {
-		this.lastLoc = this.position.clone();
-		if (!groupTogether) {
-			this.flock(boids);
-		} else {
-			this.align(boids);
-		}
-		this.borders();
-		this.update();
-		this.calculateTail();
-		this.moveHead();
-	},
-
-	calculateTail: function() {
-		var segments = this.path.segments,
-			shortSegments = this.shortPath.segments;
-		var speed = this.vector.length;
-		var pieceLength = 5 + speed / 3;
-		var point = this.position;
-		segments[0].point = shortSegments[0].point = point;
-		// Chain goes the other way than the movement
-		var lastVector = -this.vector;
-		for (var i = 1; i < this.amount; i++) {
-			var vector = segments[i].point - point;
-			this.count += speed * 10;
-			var wave = Math.sin((this.count + i * 3) / 300);
-			var sway = lastVector.rotate(90).normalize(wave);
-			point += lastVector.normalize(pieceLength) + sway;
-			segments[i].point = point;
-			if (i < 3)
-				shortSegments[i].point = point;
-			lastVector = vector;
-		}
-		this.path.smooth();
-	},
-
-	createItems: function() {
-		this.head = new Shape.Ellipse({
-			center: [0, 0],
-			size: [13, 8],
-			fillColor: 'white'
+// A tribute to Nyan Cat http://www.youtube.com/watch?v=QH2-TGUlwu4
+var mediaElement;
+var playing = false;
+MediaElement('nyan', {
+	pluginPath: '/assets/mediaelement/',
+	success: function(me) {
+		mediaElement = me;
+		me.play();
+		me.addEventListener('timeupdate', function(time) {
+			if (me.currentTime > 3.7)
+				playing = true;
 		});
-
-		this.path = new Path({
-			strokeColor: 'white',
-			strokeWidth: 2,
-			strokeCap: 'round'
-		});
-		for (var i = 0; i < this.amount; i++)
-			this.path.add(new Point());
-
-		this.shortPath = new Path({
-			strokeColor: 'white',
-			strokeWidth: 4,
-			strokeCap: 'round'
-		});
-		for (var i = 0; i < Math.min(3, this.amount); i++)
-			this.shortPath.add(new Point());
-	},
-
-	moveHead: function() {
-		this.head.position = this.position;
-		this.head.rotation = this.vector.angle;
-	},
-
-	// We accumulate a new acceleration each time based on three rules
-	flock: function(boids) {
-		var separation = this.separate(boids) * 3;
-		var alignment = this.align(boids);
-		var cohesion = this.cohesion(boids);
-		this.acceleration += separation + alignment + cohesion;
-	},
-
-	update: function() {
-		// Update velocity
-		this.vector += this.acceleration;
-		// Limit speed (vector#limit?)
-		this.vector.length = Math.min(this.maxSpeed, this.vector.length);
-		this.position += this.vector;
-		// Reset acceleration to 0 each cycle
-		this.acceleration = new Point();
-	},
-
-	seek: function(target) {
-		this.acceleration += this.steer(target, false);
-	},
-
-	arrive: function(target) {
-		this.acceleration += this.steer(target, true);
-	},
-
-	borders: function() {
-		var vector = new Point();
-		var position = this.position;
-		var radius = this.radius;
-		var size = view.size;
-		if (position.x < -radius) vector.x = size.width + radius;
-		if (position.y < -radius) vector.y = size.height + radius;
-		if (position.x > size.width + radius) vector.x = -size.width -radius;
-		if (position.y > size.height + radius) vector.y = -size.height -radius;
-		if (!vector.isZero()) {
-			this.position += vector;
-			var segments = this.path.segments;
-			for (var i = 0; i < this.amount; i++) {
-				segments[i].point += vector;
-			}
-		}
-	},
-
-	// A method that calculates a steering vector towards a target
-	// Takes a second argument, if true, it slows down as it approaches
-	// the target
-	steer: function(target, slowdown) {
-		var steer,
-			desired = target - this.position;
-		var distance = desired.length;
-		// Two options for desired vector magnitude
-		// (1 -- based on distance, 2 -- maxSpeed)
-		if (slowdown && distance < 100) {
-			// This damping is somewhat arbitrary:
-			desired.length = this.maxSpeed * (distance / 100);
-		} else {
-			desired.length = this.maxSpeed;
-		}
-		steer = desired - this.vector;
-		steer.length = Math.min(this.maxForce, steer.length);
-		return steer;
-	},
-
-	separate: function(boids) {
-		var desiredSeperation = 60;
-		var steer = new Point();
-		var count = 0;
-		// For every boid in the system, check if it's too close
-		for (var i = 0, l = boids.length; i < l; i++) {
-			var other = boids[i];
-			var vector = this.position - other.position;
-			var distance = vector.length;
-			if (distance > 0 && distance < desiredSeperation) {
-				// Calculate vector pointing away from neighbor
-				steer += vector.normalize(1 / distance);
-				count++;
-			}
-		}
-		// Average -- divide by how many
-		if (count > 0)
-			steer /= count;
-		if (!steer.isZero()) {
-			// Implement Reynolds: Steering = Desired - Velocity
-			steer.length = this.maxSpeed;
-			steer -= this.vector;
-			steer.length = Math.min(steer.length, this.maxForce);
-		}
-		return steer;
-	},
-
-	// Alignment
-	// For every nearby boid in the system, calculate the average velocity
-	align: function(boids) {
-		var neighborDist = 25;
-		var steer = new Point();
-		var count = 0;
-		for (var i = 0, l = boids.length; i < l; i++) {
-			var other = boids[i];
-			var distance = this.position.getDistance(other.position);
-			if (distance > 0 && distance < neighborDist) {
-				steer += other.vector;
-				count++;
-			}
-		}
-
-		if (count > 0)
-			steer /= count;
-		if (!steer.isZero()) {
-			// Implement Reynolds: Steering = Desired - Velocity
-			steer.length = this.maxSpeed;
-			steer -= this.vector;
-			steer.length = Math.min(steer.length, this.maxForce);
-		}
-		return steer;
-	},
-
-	// Cohesion
-	// For the average location (i.e. center) of all nearby boids,
-	// calculate steering vector towards that location
-	cohesion: function(boids) {
-		var neighborDist = 100;
-		var sum = new Point();
-		var count = 0;
-		for (var i = 0, l = boids.length; i < l; i++) {
-			var other = boids[i];
-			var distance = this.position.getDistance(other.position);
-			if (distance > 0 && distance < neighborDist) {
-				sum += other.position; // Add location
-				count++;
-			}
-		}
-		if (count > 0) {
-			sum /= count;
-			// Steer towards the location
-			return this.steer(sum, false);
-		}
-		return sum;
 	}
 });
 
-var heartPath = new Path('M514.69629,624.70313c-7.10205,-27.02441 -17.2373,-52.39453 -30.40576,-76.10059c-13.17383,-23.70703 -38.65137,-60.52246 -76.44434,-110.45801c-27.71631,-36.64355 -44.78174,-59.89355 -51.19189,-69.74414c-10.5376,-16.02979 -18.15527,-30.74951 -22.84717,-44.14893c-4.69727,-13.39893 -7.04297,-26.97021 -7.04297,-40.71289c0,-25.42432 8.47119,-46.72559 25.42383,-63.90381c16.94775,-17.17871 37.90527,-25.76758 62.87354,-25.76758c25.19287,0 47.06885,8.93262 65.62158,26.79834c13.96826,13.28662 25.30615,33.10059 34.01318,59.4375c7.55859,-25.88037 18.20898,-45.57666 31.95215,-59.09424c19.00879,-18.32178 40.99707,-27.48535 65.96484,-27.48535c24.7373,0 45.69531,8.53564 62.87305,25.5957c17.17871,17.06592 25.76855,37.39551 25.76855,60.98389c0,20.61377 -5.04102,42.08691 -15.11719,64.41895c-10.08203,22.33203 -29.54687,51.59521 -58.40723,87.78271c-37.56738,47.41211 -64.93457,86.35352 -82.11328,116.8125c-13.51758,24.0498 -23.82422,49.24902 -30.9209,75.58594z');
-
-var boids = [];
-var groupTogether = false;
-
-// Add the boids:
-for (var i = 0; i < 30; i++) {
-	var position = Point.random() * view.size;
-	boids.push(new Boid(position, 10, 0.05));
-}
-
+var mousePos = view.center + [view.bounds.width / 3, 100];
+var position = view.center;
 
 function onFrame(event) {
-	for (var i = 0, l = boids.length; i < l; i++) {
-		if (groupTogether) {
-			var length = ((i + event.count / 30) % l) / l * heartPath.length;
-			var point = heartPath.getPointAt(length);
-			if (point)
-				boids[i].arrive(point);
-		}
-		boids[i].run(boids);
-	}
+	position += (mousePos - position) / 10;
+	var vector = (view.center - position) / 10;
+	moveStars(vector * 3);
+	moveRainbow(vector, event);
 }
 
-// Reposition the heart path whenever the window is resized:
-function onResize(event) {
-	heartPath.fitBounds(view.bounds);
-	heartPath.scale(0.8);
-}
-
-function onMouseDown(event) {
-	groupTogether = !groupTogether;
+function onMouseMove(event) {
+	mousePos = event.point;
 }
 
 function onKeyDown(event) {
-	if (event.key == 'space') {
+	if (event.key == 'space')
+		project.activeLayer.selected = !project.activeLayer.selected;
+}
+
+var moveStars = new function() {
+	// The amount of symbol we want to place;
+	var count = 50;
+
+	// Create a symbol, which we will use to place instances of later:
+	var path = new Path.Circle({
+		center: [0, 0],
+		radius: 5,
+		fillColor: 'white',
+		strokeColor: 'black'
+	});
+
+	var symbol = new Symbol(path);
+
+	// Place the instances of the symbol:
+	for (var i = 0; i < count; i++) {
+		// The center position is a random point in the view:
+		var center = Point.random() * view.size;
+		var placed = symbol.place(center);
+		placed.scale(i / count + 0.01);
+		placed.data = {
+			vector: new Point({
+				angle: Math.random() * 360,
+				length : (i / count) * Math.random() / 5
+			})
+		};
+	}
+
+	var vector = new Point({
+		angle: 45,
+		length: 0
+	});
+
+	function keepInView(item) {
+		var position = item.position;
+		var viewBounds = view.bounds;
+		if (position.isInside(viewBounds))
+			return;
+		var itemBounds = item.bounds;
+		if (position.x > viewBounds.width + 5) {
+			position.x = -item.bounds.width;
+		}
+
+		if (position.x < -itemBounds.width - 5) {
+			position.x = viewBounds.width;
+		}
+
+		if (position.y > viewBounds.height + 5) {
+			position.y = -itemBounds.height;
+		}
+
+		if (position.y < -itemBounds.height - 5) {
+			position.y = viewBounds.height
+		}
+	}
+
+	return function(vector) {
+		// Run through the active layer's children list and change
+		// the position of the placed symbols:
 		var layer = project.activeLayer;
-		layer.selected = !layer.selected;
-		return false;
+		for (var i = 0; i < count; i++) {
+			var item = layer.children[i];
+			var size = item.bounds.size;
+			var length = vector.length / 10 * size.width / 10;
+			item.position += vector.normalize(length) + item.data.vector;
+			keepInView(item);
+		}
+	};
+};
+
+var moveRainbow = new function() {
+	var paths = [];
+	var colors = ['red', 'orange', 'yellow', 'lime', 'blue', 'purple'];
+	for (var i = 0; i < colors.length; i++) {
+		var path = new Path({
+			fillColor: colors[i]
+		});
+		paths.push(path);
+	}
+
+	var count = 30;
+	var group = new Group(paths);
+	var headGroup;
+	var eyePosition = new Point();
+	var eyeFollow = (Point.random() - 0.5);
+	var blinkTime = 200;
+	function createHead(vector, count) {
+		var eyeVector = (eyePosition - eyeFollow);
+		eyePosition -= eyeVector / 4;
+		if (eyeVector.length < 0.00001)
+			eyeFollow = (Point.random() - 0.5);
+		if (headGroup)
+			headGroup.remove();
+		var top = paths[0].lastSegment.point;
+		var bottom = paths[paths.length - 1].firstSegment.point;
+		var radius = (bottom - top).length / 2;
+		var circle = new Path.Circle({
+			center: top + (bottom - top) / 2,
+			radius: radius,
+			fillColor: 'black'
+		});
+		circle.scale(vector.length / 100, 1);
+		circle.rotate(vector.angle, circle.center);
+
+		innerCircle = circle.clone();
+		innerCircle.scale(0.5);
+		innerCircle.fillColor = (count % blinkTime < 3)
+			|| (count % (blinkTime + 5) < 3) ? 'black' : 'white';
+		if (count % (blinkTime + 40) == 0)
+			blinkTime = Math.round(Math.random() * 40) + 200;
+		var eye = circle.clone();
+		eye.position += eyePosition * radius;
+		eye.scale(0.15, innerCircle.position);
+		eye.fillColor = 'black';
+		headGroup = new Group(circle, innerCircle, eye);
+	}
+
+	return function(vector, event) {
+		var vector = (view.center - position) / 10;
+
+		if (vector.length < 5)
+			vector.length = 5;
+		count += vector.length / 100;
+		group.translate(vector);
+		var rotated = vector.rotate(90);
+		var middle = paths.length / 2;
+		for (var j = 0; j < paths.length; j++) {
+			var path = paths[j];
+			var nyanSwing = playing ? Math.sin(event.count / 2) * vector.length : 1;
+			var unitLength = vector.length * (2 + Math.sin(event.count / 10)) / 2;
+			var length = (j - middle) * unitLength + nyanSwing;
+			var top = view.center + rotated.normalize(length);
+			var bottom = view.center + rotated.normalize(length + unitLength);
+			path.add(top);
+			path.insert(0, bottom);
+			if (path.segments.length > 200) {
+				var index = Math.round(path.segments.length / 2);
+				path.segments[index].remove();
+				path.segments[index - 1].remove();
+			}
+			path.smooth();
+		}
+		createHead(vector, event.count);
+		if (mediaElement)
+			mediaElement.setVolume(vector.length / 200);
 	}
 }
