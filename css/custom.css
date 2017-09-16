@@ -39,6 +39,7 @@
 #mainDiv {
     position: relative;
     margin: 0 auto;
+    width: fit-content;
 }
 
 #mainTitle {
