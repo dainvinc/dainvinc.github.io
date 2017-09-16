@@ -35,6 +35,12 @@
     left: 25%;
 }
 
+#mainDiv {
+    margin-top: -50%;
+    margin-left: -25%;
+    width: 40%;
+}
+
 #mainTitle {
     font-size: 60px;
     color: white;
