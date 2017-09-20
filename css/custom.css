@@ -49,3 +49,12 @@
     color: white;
     margin-bottom: 20px;
 }
+
+#footerDiv {
+    position: absolute;
+    height: 9em;
+    width: 100%;
+    background-color: wheat;
+    color: black;
+    bottom: 0;
+}
