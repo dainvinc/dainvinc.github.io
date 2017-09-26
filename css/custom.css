@@ -50,6 +50,10 @@
     margin-bottom: 20px;
 }
 
+#fix-segment {
+    width: 50%;
+}
+
 #footerDiv {
     position: absolute;
     height: 9em;
