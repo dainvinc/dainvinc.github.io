@@ -1,7 +1,7 @@
 /* global $ */
 $(document).ready(function() {
     if(window.location.pathname == '/about.html') {
-        alert("Click to know more about Vishal!");    
+        console.log("Logged on to the About page");    
     }
     
     $(".username").click(function() {
