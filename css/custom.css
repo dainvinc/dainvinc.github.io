@@ -58,3 +58,7 @@
     color: black;
     bottom: 0;
 }
+
+#footerSocialDiv {
+    opacity: 0.9;
+}
