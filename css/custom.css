@@ -66,3 +66,7 @@
 #footerSocialDiv {
     opacity: 0.9;
 }
+
+.footer-for-resume {
+    display: inline-flex;
+}
