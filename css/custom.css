@@ -372,4 +372,6 @@ h4 {
 
 .site-nav a:hover {
   background-color: #31b0d5;
+  padding: 10px;
+  border-radius: 2px;
 }
