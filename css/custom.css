@@ -346,3 +346,11 @@ h4 {
 .white-text {
   color: white;
 }
+
+#left {
+  width: 20%;
+}
+
+#right {
+  width: 60%;
+}
