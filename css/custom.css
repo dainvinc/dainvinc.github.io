@@ -369,3 +369,7 @@ h4 {
     right: 0;
     top: 5.4px;
 }
+
+.site-nav:hover {
+  background-color: #31b0d5;
+}
