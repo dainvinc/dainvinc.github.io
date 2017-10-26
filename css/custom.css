@@ -370,6 +370,6 @@ h4 {
     top: 5.4px;
 }
 
-.site-nav:hover {
+.site-nav a:hover {
   background-color: #31b0d5;
 }
