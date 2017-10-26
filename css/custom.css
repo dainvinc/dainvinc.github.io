@@ -358,3 +358,14 @@ h4 {
   width: 70%;
   float: right;
 }
+
+.site-nav {
+      /* background: dimgrey; */
+    position: fixed;
+    padding: inherit;
+    float: right;
+    line-height: 56px;
+    opacity: 0.8;
+    right: 0;
+    top: 5.4px;
+}
