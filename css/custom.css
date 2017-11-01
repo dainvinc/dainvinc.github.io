@@ -293,8 +293,8 @@ h4 {
   display: inline-block;
   margin: 7px;
   padding: 5px 10px;
-  color: black;
-  background: white;
+  color: white;
+  background: black;
   list-style: none;
   cursor: default;
   font-size: 1.2em;
