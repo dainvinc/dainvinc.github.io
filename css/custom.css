@@ -210,7 +210,7 @@ body {
 h2 {
   font-weight: 200;
   font-size: 2rem;
-  color: #31b0d5;
+  color: gray;
   text-transform: uppercase;
   text-align: center;
 }
@@ -277,7 +277,7 @@ h4 {
 .project-content {
   flex: 1 1 auto;
   padding: 1.25rem;
-
+  
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -293,8 +293,8 @@ h4 {
   display: inline-block;
   margin: 7px;
   padding: 5px 10px;
-  color: white;
-  background: #31b0d5;
+  color: black;
+  background: white;
   list-style: none;
   cursor: default;
   font-size: 1.2em;
@@ -344,7 +344,7 @@ h4 {
 }
 
 .white-text {
-  color: white;
+  color: gray;
 }
 
 #left {
