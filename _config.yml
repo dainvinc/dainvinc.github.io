@@ -11,7 +11,7 @@ email: vishal.koosuri1@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
   &copy; Developed by Vishal Koosuri
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://yourdomain.com" # the base hostname & protocol for your site
+url: "https://dainvinc-io-dainvinc.c9users.io/" # the base hostname & protocol for your site
 twitter_username: vishal_smarty21
 github_username:  dainvinc
 linkedin_username: vishal-koosuri-0288a69a
