@@ -259,7 +259,7 @@ window.requestAnimFrame = function () {
     }
     function stepClass(step) {
       merrywrap.className = 'merrywrap';
-      merrywrap.className = 'merrywrap step-' + step;
+      merrywrap.className = 'merrywrap container-fluid step-' + step;
     }
     function openBox() {
       if (step === 1) {
