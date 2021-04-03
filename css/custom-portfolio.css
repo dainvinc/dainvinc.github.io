@@ -376,8 +376,12 @@ h4 {
 }
 
 @media (max-width: 460px) {
-  .ui.horizontal.segments {
+  div.ui.horizontal.segments {
     display: flex;
     flex-direction: column;
+  }
+
+  #fix-segment {
+    width: 100%;
   }
 }
